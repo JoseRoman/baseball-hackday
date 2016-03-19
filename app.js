@@ -5,20 +5,20 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mysql      = require('mysql');
-var connection = mysql.createConnection({
-  host     : '127.0.0.1',
-  user     : 'jose32',
-  database : 'gameday'
-});
+// var connection = mysql.createConnection({
+//   host     : '127.0.0.1',
+//   user     : 'jose32',
+//   database : 'gameday'
+// });
 
-connection.connect(function(err) {
-  if (err) {
-    console.error('error connecting: ' + err.stack);
-    return;
-  }
+// connection.connect(function(err) {
+//   if (err) {
+//     console.error('error connecting: ' + err.stack);
+//     return;
+//   }
 
-  console.log('connected as id ' + connection.threadId);
-});
+//   console.log('connected as id ' + connection.threadId);
+// });
 
 
 //connection.connect();
@@ -44,13 +44,27 @@ app.use('/:team/players', function(req, res){
 
   var team = req.params.team;
   var query = "SELECT * FROM playersummary WHERE team='" + team + "'";
+  res.header('Access-Control-Allow-Origin', '*');
 
-  connection.query(query, function(err, rows, fields) {
-    if (err) throw err;
+  res.json(
+    [
+      {
+        "id": 112526,
+        "first": "Bartolo",
+        "last": "Colon",
+        "team": "NYY",
+        "position": "P",
+        "Year": "2011"
+      }
+    ]
+  );
 
-    res.json(rows);
+  // connection.query(query, function(err, rows, fields) {
+  //   if (err) throw err;
 
-  });
+  //   res.json(rows);
+
+  // });
 
 });
 
@@ -64,13 +78,10 @@ app.use("/metrics", function(req, res){
   //SELECT `GoodnessMetric1`, `Count`, `PitchType` FROM `dummyexampletable` WHERE `Year`=2015 AND `BatterID`=112526
   var query = "SELECT * FROM playersummary WHERE team='" + team + "' LIMIT 5";
 
-  connection.query(query, function(err, rows, fields) {
-    if (err) throw err;
+});
 
-    res.json(rows);
-
-  });
-
+app.use('/', function(req, res){
+  res.render('index');
 });
 
 
